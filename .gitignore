@@ -1,4 +1,18 @@
 node_modules/
 .env
+
+# Ambiente virtual
+venv/
+tests/venv/
+
+# Arquivos Python compilados
 __pycache__/
+*.pyc
+*.pyo
+
+# Arquivos de testes
+.coverage
+htmlcov/
+
+# Outros
 *.log
