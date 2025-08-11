@@ -23,8 +23,8 @@ src/
 │ ├── repository/ # Acesso a dados (único, usado por todos os módulos)
 │ ├── routes/ # Definição das rotas HTTP
 │ ├── validations/ # Validações de entrada/payload
-│ └── middleware/ # Middlewares específicos da API
-| |__schema/ # Esquema da para o Swagger, deve estar presente em todas as rotas
+│ ├── middleware/ # Middlewares específicos da API
+│ └── schema/ # Esquemas para o Swagger, presente em todas as rotas
 │
 ├── snmp/ # Lógica SNMP
 │ ├── snmp.service.ts # Coleta e interpretação de métricas SNMP
@@ -45,7 +45,7 @@ src/
 
 ### 1️⃣ Clonar o repositório
 ```bash
-git clone https://github.com/seu-usuario/infrawatch.git
+git clone https://github.com/SegmentationFault42/InfraWatch.git
 cd infrawatch
 
 2️⃣ Instalar dependências
@@ -67,7 +67,6 @@ npm start
 📑 Documentação da API
 A documentação automática é gerada com Swagger e pode ser acessada em:
 http://localhost:3333/docs
-🔍 Healthcheck
 
 
 Endpoint inicial para verificação de integridade do backend:
@@ -85,10 +84,11 @@ json
 Lint:
 bash
 npm run lint
-Formatar código:
 
+Formatar código:
 bash
 npm run format
+
 Todas as PRs devem passar no ESLint e estar formatadas com Prettier antes do merge.
 
 👥 Contribuição
