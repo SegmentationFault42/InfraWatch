@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 import { ENV } from '../../config/dotenv.ts';
 
 class UserService {
-    async createFarmacia(
+    async createUser(
         data: Omit<
             User,
             'id' | 'role' | 'updated_at' | 'created_at' | 'profile_image_url'

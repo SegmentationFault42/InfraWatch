@@ -7,7 +7,7 @@ class UserController {
     async createUser(req: FastifyRequest, res: FastifyReply) {
         try {
             const data = userValidation.createUserSchema.parse(req.body);
-            await userService.createFarmacia(data);
+            await userService.createUser(data);
             res.status(201).send({ message: 'Usuario criado com sucesso' });
         } catch (err: any) {
             if (err instanceof z.ZodError) {
@@ -28,8 +28,11 @@ class UserController {
             );
             res.status(200).send({ TokenOrStatus });
         } catch (error: any) {
-             if (error.message === "Usuário Inexistente" || error.message === "Senha inválida") {
-                res.status(400).send({ message: "Credenciais inválidas" });
+            if (
+                error.message === 'Usuário Inexistente' ||
+                error.message === 'Senha inválida'
+            ) {
+                res.status(400).send({ message: 'Credenciais inválidas' });
             } else {
                 res.status(500).send({ message: error.message });
             }
