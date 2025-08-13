@@ -9,7 +9,10 @@
         // See also https://aka.ms/tsconfig/module
         "module": "nodenext",
         "target": "esnext",
-        "types": [],
+
+        "types": ["vitest/globals"],
+
+
         // For nodejs:
         // "lib": ["esnext"],
         // "types": ["node"],
@@ -33,6 +36,10 @@
         // "noPropertyAccessFromIndexSignature": true,
 
         // Recommended Options
+
+        "allowImportingTsExtensions": true,
+        "noEmit": true,
+
         "strict": true,
         "jsx": "react-jsx",
         //"verbatimModuleSyntax": true,
@@ -41,6 +48,8 @@
         "moduleDetection": "force",
         "skipLibCheck": true
     },
+
     "include": ["src/**/*.ts"],
+
     "exclude": ["node_modules", "dist"]
 }

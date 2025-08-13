@@ -3,7 +3,7 @@ import { ENV } from './config/dotenv.js';
 import { Routes } from './api/routes/routes.js';
 import { Swagger } from './config/swagger.config.js';
 
-const app = fastify({ logger: false });
+export const app = fastify({ logger: false });
 app.register(Swagger);
 app.register(Routes);
 
