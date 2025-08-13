@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { pingMultipleHosts } from '../../ping/ping.service.ts';
-import { pingParamSchema } from '../../../src/validations/ping.validation.ts';
+import { pingParamSchema } from '../validations/ping.validation.ts';
 
 export async function pingController(
     request: FastifyRequest<{ Params: { host: string } }>,

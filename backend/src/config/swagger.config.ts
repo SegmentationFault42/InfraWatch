@@ -20,4 +20,5 @@ export function Swagger(app: FastifyInstance) {
             deepLinking: false,
         },
     });
+    
 }
