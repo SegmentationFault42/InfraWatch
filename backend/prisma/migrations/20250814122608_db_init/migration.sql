@@ -25,8 +25,25 @@ CREATE TABLE `users` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `audit_logs` (
+    `id` VARCHAR(191) NOT NULL,
+    `user_id` VARCHAR(191) NULL,
+    `method` VARCHAR(191) NOT NULL,
+    `url` VARCHAR(191) NOT NULL,
+    `ip` VARCHAR(191) NOT NULL,
+    `status_code` INTEGER NOT NULL,
+    `duration_ms` INTEGER NOT NULL,
+    `params` VARCHAR(191) NULL,
+    `query` VARCHAR(191) NULL,
+    `body` VARCHAR(191) NULL,
+    `timestamp` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `systems` (
-    `id` CHAR(36) NOT NULL,
+    `id` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
     `url` VARCHAR(191) NOT NULL,
     `monitor_type` ENUM('http', 'https', 'ping', 'tcp') NOT NULL,
@@ -45,7 +62,7 @@ CREATE TABLE `systems` (
 
 -- CreateTable
 CREATE TABLE `status_logs` (
-    `id` CHAR(36) NOT NULL,
+    `id` VARCHAR(191) NOT NULL,
     `system_id` VARCHAR(191) NOT NULL,
     `status` ENUM('up', 'down', 'warning', 'unknown') NOT NULL,
     `response_time` INTEGER NULL,
@@ -58,7 +75,7 @@ CREATE TABLE `status_logs` (
 
 -- CreateTable
 CREATE TABLE `alerts` (
-    `id` CHAR(36) NOT NULL,
+    `id` VARCHAR(191) NOT NULL,
     `system_id` VARCHAR(191) NOT NULL,
     `severity` ENUM('critical', 'warning', 'info') NOT NULL,
     `status` ENUM('active', 'resolved', 'acknowledged') NOT NULL DEFAULT 'active',
@@ -74,7 +91,7 @@ CREATE TABLE `alerts` (
 
 -- CreateTable
 CREATE TABLE `sla_configs` (
-    `id` CHAR(36) NOT NULL,
+    `id` VARCHAR(191) NOT NULL,
     `system_id` VARCHAR(191) NOT NULL,
     `uptime_target` DOUBLE NOT NULL DEFAULT 99.9,
     `response_time_target` INTEGER NOT NULL DEFAULT 1000,
@@ -89,7 +106,7 @@ CREATE TABLE `sla_configs` (
 
 -- CreateTable
 CREATE TABLE `sla_reports` (
-    `id` CHAR(36) NOT NULL,
+    `id` VARCHAR(191) NOT NULL,
     `system_id` VARCHAR(191) NOT NULL,
     `month` INTEGER NOT NULL,
     `year` INTEGER NOT NULL,
@@ -102,6 +119,9 @@ CREATE TABLE `sla_reports` (
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- AddForeignKey
+ALTER TABLE `audit_logs` ADD CONSTRAINT `audit_logs_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `systems` ADD CONSTRAINT `systems_created_by_fkey` FOREIGN KEY (`created_by`) REFERENCES `users`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;

@@ -5,8 +5,7 @@ import { AuditLogsRepository } from '../middleware/AuditLogMiddleware.ts';
 
 export async function pingRoutes(fastify: FastifyInstance) {
   fastify.get('/ping/:host', {
-    schema: pingRouteSchema,
-    preHandler: AuditLogsRepository, // agora correto
+    schema: pingRouteSchema, 
     handler: pingController,
   });
 }

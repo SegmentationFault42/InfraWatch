@@ -5,7 +5,8 @@ import { Swagger } from './config/swagger.config.js';
 import fastifyCookie from '@fastify/cookie';
 
 export const app = fastify({ logger: false });
-app.register(Swagger);
+
+Swagger(app)
 app.register(Routes);
 app.register(fastifyCookie, {
     secret: ENV.COOKIE_SECRET,

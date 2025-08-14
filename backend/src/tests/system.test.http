@@ -1,0 +1,16 @@
+### Criar um novo sistema - Sucesso
+POST http://localhost:3333/hosts/create
+Content-Type: application/json
+
+
+{
+  "name": "Servidor Principal",
+  "url": "https://meuservidor.com",
+  "monitor_type": "https",
+  "check_interval": 60,
+  "timeout": 30,
+  "is_enabled": true,
+  "alert_email": "alertas@meuservidor.com",
+  "description": "Servidor de produção",
+  "created_by": "2a9a79bb-bbb2-4634-9477-a209f685f887"
+}

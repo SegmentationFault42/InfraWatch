@@ -20,7 +20,7 @@ model Sessions {
   @@index([expire], name: "IDX_session_expire")
 }
 
-export model User {
+model User {
   id               String        @id @default(uuid())
   email            String        @unique
   password         String
@@ -39,7 +39,7 @@ export model User {
   @@map("users")
 }
 
-export model Audit_logs {
+model Audit_logs {
   id           String   @id @default(uuid())
   user_id      String?
   method       String
@@ -69,13 +69,13 @@ model System {
   timeout        Int           @default(30)
   status         SystemStatus  @default(unknown)
   is_enabled     Boolean       @default(true)
-  alert_email    String?
-  description    String?
-  created_by     String?
+  alert_email    String
+  description    String
+  created_by     String
   created_at     DateTime      @default(now())
   updated_at     DateTime      @default(now()) @updatedAt
 
-  createdBy      User?         @relation("UserSystems", fields: [created_by], references: [id])
+  createdBy      User        @relation("UserSystems", fields: [created_by], references: [id])
   status_logs    StatusLog[]
   alerts         Alert[]
   sla_configs    SlaConfig?
