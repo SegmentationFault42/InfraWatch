@@ -38,7 +38,7 @@ describe('Ping endpoint', () => {
     it('Deve retornar 400 para host inválido', async () => {
         const response = await server.inject({
             method: 'GET',
-            url: '/ping/???', // claramente inválido
+            url: '/ping/???',
         });
 
         expect(response.statusCode).toBe(400);

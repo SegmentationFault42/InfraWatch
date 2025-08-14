@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -14,54 +13,79 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model sessions {
+model Sessions {
   sid    String   @id
   sess   Json
   expire DateTime
   @@index([expire], name: "IDX_session_expire")
 }
 
-model users {
-  id              String    @id @db.Char(36)
-  email           String?   @unique
-  first_name      String?
-  last_name       String?
+model User {
+  id               String        @id @default(uuid())
+  email            String        @unique
+  password         String
+  first_name       String
+  last_name        String
   profile_image_url String?
-  role            Role      @default(viewer)
-  created_at      DateTime  @default(now())
-  updated_at      DateTime  @default(now()) @updatedAt
-  systems         systems[] @relation("UserSystems")
-  alerts_ack      alerts[]  @relation("AlertAcknowledgedBy")
+  role             Role          @default(viewer)
+  created_at       DateTime      @default(now())
+  updated_at       DateTime      @default(now()) @updatedAt
+  systems          System[]      @relation("UserSystems")
+  alerts_ack       Alert[]       @relation("AlertAcknowledgedBy")
+
+  
+  audit_logs       Audit_logs[]  @relation("UserAuditLogs")
 
   @@map("users")
 }
 
-model systems {
-  id            String        @id @db.Char(36)
-  name          String
-  url           String
-  monitor_type  MonitorType
-  check_interval Int          @default(60)
-  timeout       Int           @default(30)
-  status        SystemStatus  @default(unknown)
-  is_enabled    Boolean       @default(true)
-  alert_email   String?
-  description   String?
-  created_by    String?       
-  created_at    DateTime      @default(now())
-  updated_at    DateTime      @default(now()) @updatedAt
+model Audit_logs {
+  id           String   @id @default(uuid())
+  user_id      String?
+  method       String
+  url          String
+  ip           String
+  status_code  Int
+  duration_ms  Int
+  params       String?
+  query        String?
+  body         String?
+  timestamp    DateTime @default(now())
 
-  createdBy users? @relation("UserSystems", fields: [created_by], references: [id])
-  status_logs status_logs[]
-  alerts alerts[]
-  sla_configs sla_configs?
-  sla_reports sla_reports[]
+  
+  user         User?    @relation("UserAuditLogs", fields: [user_id], references: [id])
+
+  @@map("audit_logs")
+}
+
+
+
+model System {
+  id             String        @id @default(uuid())
+  name           String
+  url            String
+  monitor_type   MonitorType
+  check_interval Int           @default(60)
+  timeout        Int           @default(30)
+  status         SystemStatus  @default(unknown)
+  is_enabled     Boolean       @default(true)
+  alert_email    String
+  description    String
+  created_by     String
+  created_at     DateTime      @default(now())
+  updated_at     DateTime      @default(now()) @updatedAt
+
+  createdBy      User        @relation("UserSystems", fields: [created_by], references: [id])
+  status_logs    StatusLog[]
+  alerts         Alert[]
+  sla_configs    SlaConfig?
+  sla_reports    SlaReport[]
 
   @@map("systems")
 }
 
-model status_logs {
-  id            String       @id @db.Char(36)
+model StatusLog {
+  id            String       @id @default(uuid())
   system_id     String
   status        SystemStatus
   response_time Int?
@@ -69,60 +93,61 @@ model status_logs {
   error_message String?
   checked_at    DateTime     @default(now())
 
-  system systems @relation(fields: [system_id], references: [id], onDelete: Cascade)
+  system        System       @relation(fields: [system_id], references: [id], onDelete: Cascade)
 
   @@map("status_logs")
 }
 
-model alerts {
-  id              String        @id @db.Char(36)
-  system_id       String
-  severity        AlertSeverity
-  status          AlertStatus   @default(active)
-  title           String
-  message         String
-  acknowledged_by String?
-  acknowledged_at DateTime?
-  resolved_at     DateTime?
-  created_at      DateTime      @default(now())
+model Alert {
+  id               String        @id @default(uuid())
+  system_id        String
+  severity         AlertSeverity
+  status           AlertStatus   @default(active)
+  title            String
+  message          String
+  acknowledged_by  String?
+  acknowledged_at  DateTime?
+  resolved_at      DateTime?
+  created_at       DateTime      @default(now())
 
-  system systems  @relation(fields: [system_id], references: [id], onDelete: Cascade)
-  acknowledgedBy users? @relation("AlertAcknowledgedBy", fields: [acknowledged_by], references: [id])
+  system           System        @relation(fields: [system_id], references: [id], onDelete: Cascade)
+  acknowledgedBy   User?         @relation("AlertAcknowledgedBy", fields: [acknowledged_by], references: [id])
 
   @@map("alerts")
 }
 
-model sla_configs {
-  id                      String   @id @db.Char(36)
-  system_id               String   @unique
-  uptime_target           Float    @default(99.9)
-  response_time_target    Int      @default(1000)
-  alert_on_sla_violation  Boolean  @default(true)
-  alert_threshold_minutes Int      @default(5)
-  created_at              DateTime @default(now())
-  updated_at              DateTime @default(now()) @updatedAt
+model SlaConfig {
+  id                       String   @id @default(uuid())
+  system_id                String   @unique
+  uptime_target            Float    @default(99.9)
+  response_time_target     Int      @default(1000)
+  alert_on_sla_violation   Boolean  @default(true)
+  alert_threshold_minutes  Int      @default(5)
+  created_at               DateTime @default(now())
+  updated_at               DateTime @default(now()) @updatedAt
 
-  system systems @relation(fields: [system_id], references: [id], onDelete: Cascade)
+  system                   System   @relation(fields: [system_id], references: [id], onDelete: Cascade)
 
   @@map("sla_configs")
 }
 
-model sla_reports {
-  id                   String   @id @db.Char(36)
-  system_id            String
-  month                Int
-  year                 Int
-  total_checks         Int      @default(0)
-  successful_checks    Int      @default(0)
-  uptime_percentage    Float    @default(0)
+model SlaReport {
+  id                    String   @id @default(uuid())
+  system_id             String
+  month                 Int
+  year                  Int
+  total_checks          Int      @default(0)
+  successful_checks     Int      @default(0)
+  uptime_percentage     Float    @default(0)
   average_response_time Float?
-  total_downtime       Int      @default(0)
-  created_at           DateTime @default(now())
+  total_downtime        Int      @default(0)
+  created_at            DateTime @default(now())
 
-  system systems @relation(fields: [system_id], references: [id], onDelete: Cascade)
+  system                System   @relation(fields: [system_id], references: [id], onDelete: Cascade)
 
   @@map("sla_reports")
 }
+
 
 enum Role {
   admin

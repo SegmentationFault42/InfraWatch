@@ -35,24 +35,26 @@ O módulo de Ping do InfraWatch fornece uma API REST moderna e eficiente para te
 
 ## ✨ **Funcionalidades**
 
-| Funcionalidade | Descrição | Status |
-|:---------------|:----------|:------:|
-| **Ping Único** | Testa conectividade com um host específico | ✅ |
-| **Ping em Lote** | Executa múltiplos pings simultaneamente | ✅ |
-| **Validação de Hosts** | IPv4 e resolução de domínios | ✅ |
-| **Timeouts Configuráveis** | Controle fino sobre tempo de resposta | ✅ |
-| **Retentativas** | Sistema de retry para hosts instáveis | ✅ |
-| **Métricas de Latência** | Medição precisa de tempo de resposta | ✅ |
+| Funcionalidade             | Descrição                                  | Status |
+| :------------------------- | :----------------------------------------- | :----: |
+| **Ping Único**             | Testa conectividade com um host específico |   ✅   |
+| **Ping em Lote**           | Executa múltiplos pings simultaneamente    |   ✅   |
+| **Validação de Hosts**     | IPv4 e resolução de domínios               |   ✅   |
+| **Timeouts Configuráveis** | Controle fino sobre tempo de resposta      |   ✅   |
+| **Retentativas**           | Sistema de retry para hosts instáveis      |   ✅   |
+| **Métricas de Latência**   | Medição precisa de tempo de resposta       |   ✅   |
 
 ---
 
 ## 🚀 **Instalação**
 
 ### **Pré-requisitos**
+
 - Node.js ≥ 16.0.0
 - npm ou yarn
 
 ### **Dependências**
+
 ```bash
 npm install ping fastify zod
 Instalação Completa
@@ -105,7 +107,7 @@ json[
     "timestamp": "2025-01-15T10:30:00.000Z"
   },
   {
-    "target": "8.8.8.8", 
+    "target": "8.8.8.8",
     "alive": true,
     "latency": 8.7,
     "attempts": 1,
@@ -124,7 +126,7 @@ json{
 <details>
 <summary><strong>⚠️ 500 Internal Server Error</strong></summary>
 json{
-  "error": "Internal Server Error", 
+  "error": "Internal Server Error",
   "message": "Erro interno do servidor",
   "statusCode": 500
 }
@@ -137,7 +139,7 @@ mermaidgraph TB
     B --> C[🎛️ Controller/Handler]
     C --> D[⚡ Serviço de Ping]
     D --> E[🔧 Utilitários]
-    
+
     B --> F[✅ Validação Zod]
     D --> G[🔄 Execução Paralela]
     D --> H[⏱️ Timeout & Retry]
@@ -228,3 +230,4 @@ const pingHosts = async (hosts) => {
 
 // Uso
 const onlineHosts = await pingHosts(['google.com', '8.8.8.8', 'github.com']);
+```
