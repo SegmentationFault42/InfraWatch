@@ -17,7 +17,7 @@ export async function verifyJWT(req: FastifyRequest, res: FastifyReply) {
     try {
         const decoded = jwt.verify(token, ENV.JWT_SECRET);
         (req as any).user = decoded;
-    } catch (error) {
+    } catch (error: any) {
         return res.status(401).send({ error: 'Token inválido ou expirado' });
     }
 }

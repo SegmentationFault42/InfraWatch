@@ -1,6 +1,6 @@
 import { userRepository } from '../repositories/user.repository.ts';
 import * as bcrypt from 'bcrypt';
-import { User } from '../../generated/prisma/index.js';
+import {User} from "@prisma/client"
 import jwt from 'jsonwebtoken';
 import { ENV } from '../../config/dotenv.ts';
 

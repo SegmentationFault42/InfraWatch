@@ -20,24 +20,48 @@ model Sessions {
   @@index([expire], name: "IDX_session_expire")
 }
 
-model User {
-  id               String    @id @default(uuid())
-  email            String   @unique
-  password String
+export model User {
+  id               String        @id @default(uuid())
+  email            String        @unique
+  password         String
   first_name       String
   last_name        String
   profile_image_url String?
-  role             Role      @default(viewer)
-  created_at       DateTime  @default(now())
-  updated_at       DateTime  @default(now()) @updatedAt
-  systems          System[]  @relation("UserSystems")
-  alerts_ack       Alert[]   @relation("AlertAcknowledgedBy")
+  role             Role          @default(viewer)
+  created_at       DateTime      @default(now())
+  updated_at       DateTime      @default(now()) @updatedAt
+  systems          System[]      @relation("UserSystems")
+  alerts_ack       Alert[]       @relation("AlertAcknowledgedBy")
+
+  
+  audit_logs       Audit_logs[]  @relation("UserAuditLogs")
 
   @@map("users")
 }
 
+export model Audit_logs {
+  id           String   @id @default(uuid())
+  user_id      String?
+  method       String
+  url          String
+  ip           String
+  status_code  Int
+  duration_ms  Int
+  params       String?
+  query        String?
+  body         String?
+  timestamp    DateTime @default(now())
+
+  
+  user         User?    @relation("UserAuditLogs", fields: [user_id], references: [id])
+
+  @@map("audit_logs")
+}
+
+
+
 model System {
-  id             String        @id @db.Char(36)
+  id             String        @id @default(uuid())
   name           String
   url            String
   monitor_type   MonitorType
@@ -61,7 +85,7 @@ model System {
 }
 
 model StatusLog {
-  id            String       @id @db.Char(36)
+  id            String       @id @default(uuid())
   system_id     String
   status        SystemStatus
   response_time Int?
@@ -75,7 +99,7 @@ model StatusLog {
 }
 
 model Alert {
-  id               String        @id @db.Char(36)
+  id               String        @id @default(uuid())
   system_id        String
   severity         AlertSeverity
   status           AlertStatus   @default(active)
@@ -93,7 +117,7 @@ model Alert {
 }
 
 model SlaConfig {
-  id                       String   @id @db.Char(36)
+  id                       String   @id @default(uuid())
   system_id                String   @unique
   uptime_target            Float    @default(99.9)
   response_time_target     Int      @default(1000)
@@ -108,7 +132,7 @@ model SlaConfig {
 }
 
 model SlaReport {
-  id                    String   @id @db.Char(36)
+  id                    String   @id @default(uuid())
   system_id             String
   month                 Int
   year                  Int
